@@ -9,6 +9,8 @@
 
     Copyright (c) 2013, Felix Eisele
     All rights reserved.
+		
+		Code is based on K. Townsend (microBuilder.eu)
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -38,6 +40,11 @@
 volatile uint32_t SystemTick::systickTicks = 0;
 volatile uint32_t SystemTick::systickRollovers=0;
 
+/**************************************************************************/
+/*! 
+    @brief Systick interrupt handler
+*/
+/**************************************************************************/
 void SystemTick::Handler()
 {
 	
@@ -47,12 +54,22 @@ void SystemTick::Handler()
 	
 }
 
+/**************************************************************************/
+/*! 
+    @brief Initalize the SystemTickTimer
+*/
+/**************************************************************************/
 void SystemTick::Init(uint32_t delayMs)
 { 
 	SysTick_Config((SystemCoreClock / 1000)*delayMs);
 
 }
 
+/**************************************************************************/
+/*! 
+    @brief Delayfunction
+*/
+/**************************************************************************/
 void SystemTick::Delay (uint32_t delayTicks) 
 {
   uint32_t curTicks;
@@ -77,6 +94,11 @@ void SystemTick::Delay (uint32_t delayTicks)
 
 
 extern "C" {
+	/**************************************************************************/
+/*! 
+    @brief Systick interrupt handler
+*/
+/**************************************************************************/
 	void SysTick_Handler()
 	{
 		SystemTick::Handler();

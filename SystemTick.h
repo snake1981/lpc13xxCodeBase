@@ -39,11 +39,28 @@
 class SystemTick
 {
 	private:	
+		// systicks
 		static volatile uint32_t systickTicks; 
+	  //count the rollovers
 		static volatile uint32_t systickRollovers;
 	public:
+		/**************************************************************************/
+		/*! 
+				@brief Systick interrupt handler
+		*/
+		/**************************************************************************/
     static void Handler();
+		/**************************************************************************/
+		/*! 
+    @brief Initalize the SystemTickTimer
+		*/
+		/**************************************************************************/
 	  virtual void Init(uint32_t ticks);
+		/**************************************************************************/
+		/*! 
+				@brief Delayfunction
+		*/
+		/**************************************************************************/
 	  virtual void Delay (uint32_t delayTicks);
 
 };
