@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     main.cpp
+    @file     SSpSoftware.h
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,27 +33,43 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
-#include "lpc13.h"
-#include "SSPSoftware.h"
-#include "SSP.h"
 
-int main(void)
+#ifndef _SSPSOFTWARE_H
+#define _SSPSOFTWARE_H
+
+#include "SSP.h"
+#include "Pin.h"
+
+class SSPSoftware : public SSP
 {
-	Lpc13 lpc;
-	lpc.InitSystem();
-	SystemTick sysTick= lpc.GetSystemTick();
-	
-	Lpc13Pin mosiPin= lpc.GetPin(0,0,InOutput);
-	Lpc13Pin misoPin= lpc.GetPin(0,1,InOutput);
-	Lpc13Pin sckPin= lpc.GetPin(0,2,InOutput);
-	
-	SSPSoftware sspSoftware = SSPSoftware(&mosiPin,&misoPin,&sckPin);
-	SSP* ssp=&sspSoftware;
-	ssp->SSPInit();
-	ssp->SSPSend(0x1);
-	
-	while(true)
-	{
-		sysTick.Delay(10);
-	}
-}
+	private:
+		//Write one byte to ssp
+		unsigned char WriteSSP(unsigned char value);
+	  // Pin for MOSI
+		Pin* MOSIPin;
+		//Pin for SCK
+		Pin* SCKPin;
+		//Pin for MISO
+		Pin* MISOPin;
+	public:
+		/**************************************************************************/
+		/*! 
+				@brief ctor
+		*/
+		/**************************************************************************/
+		SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin);
+	  	/**************************************************************************/
+			/*! 
+					@brief init the ssp
+			*/
+			/**************************************************************************/
+		virtual void SSPInit( void );
+	  	  /**************************************************************************/
+		/*! 
+				@brief Send one byte 
+		*/
+		/**************************************************************************/
+		virtual unsigned char SSPSend(unsigned char value );
+};
+
+#endif

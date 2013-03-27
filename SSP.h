@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     main.cpp
+    @file     SSP.h
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,27 +33,30 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
-#include "lpc13.h"
-#include "SSPSoftware.h"
-#include "SSP.h"
+#ifndef _SSP_H
+#define _SSP_H
 
-int main(void)
+#include "lpc13xx.h"
+
+/**************************************************************************/
+/*! 
+    @brief Baseclass for a SSP implementation
+*/
+/**************************************************************************/
+class SSP
 {
-	Lpc13 lpc;
-	lpc.InitSystem();
-	SystemTick sysTick= lpc.GetSystemTick();
-	
-	Lpc13Pin mosiPin= lpc.GetPin(0,0,InOutput);
-	Lpc13Pin misoPin= lpc.GetPin(0,1,InOutput);
-	Lpc13Pin sckPin= lpc.GetPin(0,2,InOutput);
-	
-	SSPSoftware sspSoftware = SSPSoftware(&mosiPin,&misoPin,&sckPin);
-	SSP* ssp=&sspSoftware;
-	ssp->SSPInit();
-	ssp->SSPSend(0x1);
-	
-	while(true)
-	{
-		sysTick.Delay(10);
-	}
-}
+	public:
+		/**************************************************************************/
+		/*! 
+				@brief init the ssp
+		*/
+		/**************************************************************************/
+		virtual void SSPInit( void )=0;
+	  /**************************************************************************/
+		/*! 
+				@brief Send one byte 
+		*/
+		/**************************************************************************/
+		virtual unsigned char SSPSend(unsigned char value )=0;
+};
+#endif

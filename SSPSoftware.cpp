@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     main.cpp
+    @file     SSpSoftware.cpp
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,27 +33,58 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
-#include "lpc13.h"
-#include "SSPSoftware.h"
-#include "SSP.h"
 
-int main(void)
+#include "SSpSoftware.h"
+
+/**************************************************************************/
+/*! 
+		@brief init the ssp
+*/
+/**************************************************************************/
+void SSPSoftware::SSPInit( void )
 {
-	Lpc13 lpc;
-	lpc.InitSystem();
-	SystemTick sysTick= lpc.GetSystemTick();
+	// CPHA=1 und CPOL=1 
 	
-	Lpc13Pin mosiPin= lpc.GetPin(0,0,InOutput);
-	Lpc13Pin misoPin= lpc.GetPin(0,1,InOutput);
-	Lpc13Pin sckPin= lpc.GetPin(0,2,InOutput);
-	
-	SSPSoftware sspSoftware = SSPSoftware(&mosiPin,&misoPin,&sckPin);
-	SSP* ssp=&sspSoftware;
-	ssp->SSPInit();
-	ssp->SSPSend(0x1);
-	
-	while(true)
-	{
-		sysTick.Delay(10);
-	}
+  // MOSI = CLK = HIGH 
+	this->MOSIPin->SetValue(true);
+	this->SCKPin->SetValue(true);
+}
+/**************************************************************************/
+/*! 
+		@brief Write one byte to ssp
+*/
+/**************************************************************************/
+unsigned char SSPSoftware::SSPSend(unsigned char value )
+{
+	return this->WriteSSP(value);
+}
+/**************************************************************************/
+/*! 
+		@brief Write one byte to ssp
+*/
+/**************************************************************************/
+unsigned char SSPSoftware::WriteSSP( unsigned char value )
+{
+	  unsigned char i;
+   for( i =0 ; i < 8; i++ ){
+      this->MOSIPin->SetValue( value & 0x80  );  
+      // shift next bit		 
+      value = (value << 1);    
+      
+      this->SCKPin->SetValue( 1 );     
+			// fetch MISO     
+      value |= this->MISOPin->GetValue();     
+      
+     this->SCKPin->SetValue( 0 );
+		 //TODO inset wait_us(1)  
+  }
+  return value;
+}
+
+//CTOR
+SSPSoftware::SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin)
+{
+	this->MISOPin=misoPin;
+	this->MOSIPin=mosiPin;
+	this->SCKPin=sckPin;
 }

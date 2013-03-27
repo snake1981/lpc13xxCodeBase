@@ -34,7 +34,7 @@
 */
 /**************************************************************************/
 #include "SystemTick.h"
-
+#include "Lpc13Pin.h"
 class Lpc13
 {
 	private:
@@ -42,4 +42,5 @@ class Lpc13
 	public:
 		void InitSystem();
 		SystemTick GetSystemTick();
+	  Lpc13Pin GetPin(unsigned int port,unsigned int pin,PinType pinType);
 };

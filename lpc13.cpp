@@ -34,6 +34,7 @@
 */
 /**************************************************************************/
 #include "lpc13.h"
+#include "Lpc13Pin.h"
 
 SystemTick Lpc13::GetSystemTick()
 {
@@ -45,4 +46,9 @@ void Lpc13::InitSystem()
 	//Init SysTimer
 	systemTick= SystemTick();
 	systemTick.Init(10);
+}
+Lpc13Pin Lpc13::GetPin(unsigned int port,unsigned int pin,PinType pinType)
+{
+	Lpc13Pin p = Lpc13Pin(port,pin,pinType);
+	return p;
 }
