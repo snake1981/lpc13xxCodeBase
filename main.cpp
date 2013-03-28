@@ -36,24 +36,33 @@
 #include "lpc13.h"
 #include "SSPSoftware.h"
 #include "SSP.h"
+#include "I2C.h"
 
 int main(void)
 {
 	Lpc13 lpc;
-	lpc.InitSystem();
-	SystemTick sysTick= lpc.GetSystemTick();
+	Lpc13Timer timer= lpc.GetTimer();
 	
 	Lpc13Pin mosiPin= lpc.GetPin(0,0,InOutput);
 	Lpc13Pin misoPin= lpc.GetPin(0,1,InOutput);
 	Lpc13Pin sckPin= lpc.GetPin(0,2,InOutput);
 	
-	SSPSoftware sspSoftware = SSPSoftware(&mosiPin,&misoPin,&sckPin);
-	SSP* ssp=&sspSoftware;
+	SSPSoftware sspSoftware= lpc.GetSoftwareSSP(&misoPin,&mosiPin,&sckPin,&timer);
+   
+	SSP* ssp = &sspSoftware;
+	
 	ssp->SSPInit();
 	ssp->SSPSend(0x1);
 	
+	LPC13I2C lpci2c = lpc.GetI2C();
+  lpci2c.Init();
+	
+	uint8_t temp[2];
+
+  lpci2c.Read(0x58,temp,2);
+	
 	while(true)
 	{
-		sysTick.Delay(10);
+		timer.DelayMS(10);
 	}
 }

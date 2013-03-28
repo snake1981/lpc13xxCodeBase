@@ -35,20 +35,31 @@
 /**************************************************************************/
 #include "lpc13.h"
 #include "Lpc13Pin.h"
-
-SystemTick Lpc13::GetSystemTick()
+#include "SSPSoftware.h"
+#include "lpc13Timer.h"
+Lpc13Timer Lpc13::GetTimer()
 {
-	return systemTick;
+	//Init Timer
+	Lpc13Timer t = Lpc13Timer();
+	t.Init(10);
+	return t;
 }
 
-void Lpc13::InitSystem()
-{
-	//Init SysTimer
-	systemTick= SystemTick();
-	systemTick.Init(10);
-}
 Lpc13Pin Lpc13::GetPin(unsigned int port,unsigned int pin,PinType pinType)
 {
 	Lpc13Pin p = Lpc13Pin(port,pin,pinType);
 	return p;
+}
+
+SSPSoftware Lpc13::GetSoftwareSSP(Pin* misoPin,Pin* mosiPin,Pin* sckPin,Timer* timer )
+{
+	
+	SSPSoftware sspSoftware =   SSPSoftware(mosiPin,misoPin,sckPin,timer);
+	return sspSoftware;
+}
+
+LPC13I2C Lpc13::GetI2C()
+{
+	LPC13I2C i2c = LPC13I2C();
+	return i2c;
 }

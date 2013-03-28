@@ -1,0 +1,3 @@
+27.03.2013:
+
+-i2c testing (unstable code)

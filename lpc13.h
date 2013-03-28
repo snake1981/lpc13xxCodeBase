@@ -33,14 +33,17 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
-#include "SystemTick.h"
+#include "Lpc13Timer.h"
 #include "Lpc13Pin.h"
+#include "SSPSoftware.h"
+#include "LPC13I2C.h"
 class Lpc13
 {
 	private:
-		SystemTick systemTick;
 	public:
-		void InitSystem();
-		SystemTick GetSystemTick();
+		Lpc13Timer GetTimer();
 	  Lpc13Pin GetPin(unsigned int port,unsigned int pin,PinType pinType);
+		SSPSoftware GetSoftwareSSP(Pin* misoPin,Pin* mosiPin,Pin* sckPin,Timer* timer);
+		LPC13I2C GetI2C();
+	
 };

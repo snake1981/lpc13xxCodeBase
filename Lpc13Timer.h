@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     SSpSoftware.h
+    @file     SystemTick.h
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,45 +33,47 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
+#ifndef _LPC13TIMER_H
+#define _LPC13TIMER_H
 
-#ifndef _SSPSOFTWARE_H
-#define _SSPSOFTWARE_H
 
-#include "SSP.h"
-#include "Lpc13Pin.h"
-#include "Lpc13Timer.h"
+#include "LPC13xx.h"
+#include "Timer.h"
 
-class SSPSoftware : public SSP
+class Lpc13Timer : public Timer
 {
-	private:
-		//Write one byte to ssp
-		unsigned char WriteSSP(unsigned char value);
-	  // Pin for MOSI
-		Pin* MOSIPin;
-		//Pin for SCK
-		Pin* SCKPin;
-		//Pin for MISO
-		Pin* MISOPin;
-		Timer* timer;
+	private:	
+		// systicks
+		static volatile uint32_t systickTicks; 
+	  //count the rollovers
+		static volatile uint32_t systickRollovers;
 	public:
 		/**************************************************************************/
 		/*! 
-				@brief ctor
+				@brief Systick interrupt handler
 		*/
 		/**************************************************************************/
-		SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin,Timer* timer);
-	  	/**************************************************************************/
-			/*! 
-					@brief init the ssp
-			*/
-			/**************************************************************************/
-		virtual void SSPInit( void );
-	  	  /**************************************************************************/
+    static void Handler();
+		/**************************************************************************/
 		/*! 
-				@brief Send one byte 
+    @brief Initalize the SystemTickTimer
 		*/
 		/**************************************************************************/
-		virtual unsigned char SSPSend(unsigned char value );
+	  virtual void Init(uint32_t ticks);
+		/**************************************************************************/
+		/*! 
+				@brief Delayfunction
+		*/
+		/**************************************************************************/
+	  virtual void DelayMS(uint32_t delayMs);
+	
+		/**************************************************************************/
+		/*! 
+				@brief Delayfunction
+		*/
+		/**************************************************************************/
+	  virtual void DelayUS(uint32_t delayUs);
+
 };
 
 #endif

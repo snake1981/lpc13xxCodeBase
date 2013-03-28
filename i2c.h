@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     SSpSoftware.h
+    @file     i2c.h
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,45 +33,33 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
+#ifndef _I2C_H
+#define _I2C_H
 
-#ifndef _SSPSOFTWARE_H
-#define _SSPSOFTWARE_H
+#include "lpc13xx.h"
 
-#include "SSP.h"
-#include "Lpc13Pin.h"
-#include "Lpc13Timer.h"
-
-class SSPSoftware : public SSP
+class I2C
 {
-	private:
-		//Write one byte to ssp
-		unsigned char WriteSSP(unsigned char value);
-	  // Pin for MOSI
-		Pin* MOSIPin;
-		//Pin for SCK
-		Pin* SCKPin;
-		//Pin for MISO
-		Pin* MISOPin;
-		Timer* timer;
 	public:
 		/**************************************************************************/
 		/*! 
-				@brief ctor
+				@brief init the i2c
 		*/
 		/**************************************************************************/
-		SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin,Timer* timer);
-	  	/**************************************************************************/
-			/*! 
-					@brief init the ssp
-			*/
-			/**************************************************************************/
-		virtual void SSPInit( void );
-	  	  /**************************************************************************/
+		virtual bool Init( void )=0;
+	  /**************************************************************************/
 		/*! 
-				@brief Send one byte 
+				@brief Send data over i2c
+				@return true if success else false
 		*/
 		/**************************************************************************/
-		virtual unsigned char SSPSend(unsigned char value );
+		virtual bool Write(uint8_t addr, const uint8_t* data, uint32_t len )=0;
+	 /**************************************************************************/
+		/*! 
+				@brief Read data over i2c
+	      @return true if success else false
+		*/
+		/**************************************************************************/
+	  virtual bool Read(uint8_t addr, uint8_t* dataOut, uint32_t len )=0;
 };
-
 #endif

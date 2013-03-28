@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     SystemTick.h
+    @file     Timer.h
     @author   F.Eisele
     @date     25.03.2013
     @version  1.0
@@ -33,35 +33,31 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
-#include "LPC13xx.h"
+#ifndef _TIMER_H
+#define _TIMER_H
+#include "lpc13xx.h"
 
-
-class SystemTick
+/**************************************************************************/
+/*! 
+    @brief Baseclass for timer implementation
+*/
+/**************************************************************************/
+class Timer
 {
-	private:	
-		// systicks
-		static volatile uint32_t systickTicks; 
-	  //count the rollovers
-		static volatile uint32_t systickRollovers;
 	public:
 		/**************************************************************************/
 		/*! 
-				@brief Systick interrupt handler
+				@brief Wait delayMs in milliseconds
 		*/
 		/**************************************************************************/
-    static void Handler();
-		/**************************************************************************/
+		virtual void DelayMS( uint32_t delayMs )=0;
+			/**************************************************************************/
 		/*! 
-    @brief Initalize the SystemTickTimer
+				@brief Wait delayMs in microseconds
 		*/
 		/**************************************************************************/
-	  virtual void Init(uint32_t ticks);
-		/**************************************************************************/
-		/*! 
-				@brief Delayfunction
-		*/
-		/**************************************************************************/
-	  virtual void Delay (uint32_t delayTicks);
-
+		virtual void DelayUS( uint32_t delayUs )=0;
+	 
 };
 
+#endif

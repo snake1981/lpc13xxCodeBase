@@ -71,20 +71,21 @@ unsigned char SSPSoftware::WriteSSP( unsigned char value )
       // shift next bit		 
       value = (value << 1);    
       
-      this->SCKPin->SetValue( 1 );     
+      this->SCKPin->SetValue( true );     
 			// fetch MISO     
       value |= this->MISOPin->GetValue();     
       
      this->SCKPin->SetValue( 0 );
-		 //TODO inset wait_us(1)  
+		 this->timer->DelayUS(2);
   }
   return value;
 }
 
 //CTOR
-SSPSoftware::SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin)
+SSPSoftware::SSPSoftware(Pin* mosiPin,Pin* misoPin,Pin* sckPin,Timer* timer)
 {
 	this->MISOPin=misoPin;
 	this->MOSIPin=mosiPin;
 	this->SCKPin=sckPin;
+	this->timer=timer;
 }
