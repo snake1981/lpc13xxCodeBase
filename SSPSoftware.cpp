@@ -43,11 +43,11 @@
 /**************************************************************************/
 void SSPSoftware::SSPInit( void )
 {
-	// CPHA=1 und CPOL=1 
+	// CPHA=1 und CPOL= 
 	
   // MOSI = CLK = HIGH 
 	this->MOSIPin->SetValue(true);
-	this->SCKPin->SetValue(true);
+	this->SCKPin->SetValue(false);
 }
 /**************************************************************************/
 /*! 

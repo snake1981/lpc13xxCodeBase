@@ -80,19 +80,7 @@ bool LPC13I2C::Write(uint8_t addr,const uint8_t* data, uint32_t len )
 	{
 		WriteBuffer[x+2]=*data++;
 	}
-	
-	/*
-	WriteLength = 6;
-  ReadLength = 0;
-  WriteBuffer[0] = addr;
-  WriteBuffer[1] = 0x00;		// address 
-  WriteBuffer[2] = 0x55;		// Data0 
-  WriteBuffer[3] = 0xAA;		// Data1 
-  WriteBuffer[4] = 0x12;		// Data0 
-  WriteBuffer[5] = 0x34;		// Data1 
-	
-	*/
-	
+
 	I2CState st = Engine();
 	if (st==I2CSTATE_ERROR)
 		return false;
@@ -106,11 +94,9 @@ bool LPC13I2C::Write(uint8_t addr,const uint8_t* data, uint32_t len )
 		*/
 bool LPC13I2C::Read(uint8_t addr, uint8_t* dataOut, uint32_t len )
 {
-	WriteLength = 2;
+	WriteLength = 1;
   ReadLength = len;
-  WriteBuffer[0] = addr;
-  WriteBuffer[1] = 0x00;		/* address */
-  WriteBuffer[2] = addr | 0x01; //read bit
+  WriteBuffer[0] = addr | 0x01; //read bit
 	
   I2CState st = Engine();
 	if (st==I2CSTATE_ERROR)

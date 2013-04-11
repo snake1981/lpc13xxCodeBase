@@ -2,8 +2,8 @@
 ; * @file     startup_LPC13xx.s
 ; * @brief    CMSIS Cortex-M3 Core Device Startup File
 ; *           for the NXP LPC13xx Device Series
-; * @version  V1.20
-; * @date     03. May 2011
+; * @version  V1.10
+; * @date     24. November 2010
 ; *------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 ; *
 ; * @note
@@ -131,7 +131,6 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     PIOINT2_IRQHandler        ; 16+54: PIO INT2
                 DCD     PIOINT1_IRQHandler        ; 16+55: PIO INT1
                 DCD     PIOINT0_IRQHandler        ; 16+56: PIO INT0
-                DCD     SSP1_IRQHandler           ; 16+57: SSP1
 
 
                 IF      :LNOT::DEF:NO_CRP
@@ -221,6 +220,7 @@ Default_Handler PROC
                 EXPORT  PIOINT1_IRQHandler        [WEAK]
                 EXPORT  PIOINT0_IRQHandler        [WEAK]
                 EXPORT  SSP1_IRQHandler           [WEAK]
+
 
 WAKEUP_IRQHandler
 I2C_IRQHandler

@@ -42,25 +42,29 @@ int main(void)
 {
 	Lpc13 lpc;
 	Lpc13Timer timer= lpc.GetTimer();
-	
-	Lpc13Pin mosiPin= lpc.GetPin(0,0,InOutput);
-	Lpc13Pin misoPin= lpc.GetPin(0,1,InOutput);
-	Lpc13Pin sckPin= lpc.GetPin(0,2,InOutput);
+	//Define Pins for spi
+	Lpc13Pin mosiPin= lpc.GetPin(2,3,Input);
+	Lpc13Pin misoPin= lpc.GetPin(2,2,Output);
+	Lpc13Pin sckPin= lpc.GetPin(2,1,Input);
+	//Chip select
+  Lpc13Pin sSelPin= lpc.GetPin(2,0,Input);
+	sSelPin.SetValue(false);
 	
 	SSPSoftware sspSoftware= lpc.GetSoftwareSSP(&misoPin,&mosiPin,&sckPin,&timer);
    
 	SSP* ssp = &sspSoftware;
 	
 	ssp->SSPInit();
-	ssp->SSPSend(0x1);
+	unsigned char status1 = ssp->SSPSend(0x00);
+	unsigned char status2 = ssp->SSPSend(0x00);
 	
+
 	LPC13I2C lpci2c = lpc.GetI2C();
   lpci2c.Init();
 	
 	uint8_t temp[2];
 
-  lpci2c.Read(0x58,temp,2);
-	
+  bool result = lpci2c.Read(0x90,temp,2);
 	while(true)
 	{
 		timer.DelayMS(10);

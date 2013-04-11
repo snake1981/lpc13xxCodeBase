@@ -2,11 +2,11 @@
  * @file     system_LPC13xx.c
  * @purpose  CMSIS Cortex-M3 Device Peripheral Access Layer Source File
  *           for the NXP LPC13xx Device Series
- * @version  V1.20
- * @date     12. January 2012
+ * @version  V1.10
+ * @date     24. November 2010
  *
  * @note
- * Copyright (C) 2009-2012 ARM Limited. All rights reserved.
+ * Copyright (C) 2009-2010 ARM Limited. All rights reserved.
  *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Cortex-M 
@@ -146,14 +146,14 @@
 #define SYSOSCCTRL_Val        0x00000000              // Reset: 0x000
 #define WDTOSCCTRL_Val        0x00000000              // Reset: 0x000
 #define SYSPLLCTRL_Val        0x00000025              // Reset: 0x000
-#define SYSPLLCLKSEL_Val      0x00000001              // Reset: 0x000
+#define SYSPLLCLKSEL_Val      0x00000000              // Reset: 0x000
 #define MAINCLKSEL_Val        0x00000003              // Reset: 0x000
 #define SYSAHBCLKDIV_Val      0x00000001              // Reset: 0x001
 #define USBPLLCTRL_Val        0x00000023              // Reset: 0x000
-#define USBPLLCLKSEL_Val      0x00000001              // Reset: 0x000
+#define USBPLLCLKSEL_Val      0x00000000              // Reset: 0x000
 #define USBCLKSEL_Val         0x00000000              // Reset: 0x000
 #define USBCLKDIV_Val         0x00000001              // Reset: 0x001
-
+#define AHBCLKCTRL_Val        0x0001005F              // Reset: 0x1005F
 /*
 //-------- <<< end of configuration section >>> ------------------------------
 */
@@ -349,10 +349,18 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency      */
     case 3:                             /* System PLL Clock Out               */
       switch (LPC_SYSCON->SYSPLLCLKSEL & 0x03) {
           case 0:                       /* Internal RC oscillator             */
-            SystemCoreClock = __IRC_OSC_CLK * ((LPC_SYSCON->SYSPLLCTRL & 0x01F) + 1);
+            if (LPC_SYSCON->SYSPLLCTRL & 0x180) {
+              SystemCoreClock = __IRC_OSC_CLK;
+            } else {
+              SystemCoreClock = __IRC_OSC_CLK * ((LPC_SYSCON->SYSPLLCTRL & 0x01F) + 1);
+            }
             break;
           case 1:                       /* System oscillator                  */
-            SystemCoreClock = __SYS_OSC_CLK * ((LPC_SYSCON->SYSPLLCTRL & 0x01F) + 1);
+            if (LPC_SYSCON->SYSPLLCTRL & 0x180) {
+              SystemCoreClock = __SYS_OSC_CLK;
+            } else {
+              SystemCoreClock = __SYS_OSC_CLK * ((LPC_SYSCON->SYSPLLCTRL & 0x01F) + 1);
+            }
             break;
           case 2:                       /* Reserved                           */
           case 3:                       /* Reserved                           */
@@ -387,9 +395,10 @@ void SystemInit (void) {
 #endif
 
   LPC_SYSCON->SYSPLLCLKSEL  = SYSPLLCLKSEL_Val;   /* Select PLL Input         */
+  LPC_SYSCON->SYSPLLCLKUEN  = 0x01;               /* Update Clock Source      */
   LPC_SYSCON->SYSPLLCLKUEN  = 0x00;               /* Toggle Update Register   */
   LPC_SYSCON->SYSPLLCLKUEN  = 0x01;
-
+  while (!(LPC_SYSCON->SYSPLLCLKUEN & 0x01));     /* Wait Until Updated       */
 #if ((MAINCLKSEL_Val & 0x03) == 3)                /* Main Clock is PLL Out    */
   LPC_SYSCON->SYSPLLCTRL    = SYSPLLCTRL_Val;
   LPC_SYSCON->PDRUNCFG     &= ~(1 << 7);          /* Power-up SYSPLL          */
@@ -403,10 +412,13 @@ void SystemInit (void) {
 #endif
 
   LPC_SYSCON->MAINCLKSEL    = MAINCLKSEL_Val;     /* Select PLL Clock Output  */
+  LPC_SYSCON->MAINCLKUEN    = 0x01;               /* Update MCLK Clock Source */
   LPC_SYSCON->MAINCLKUEN    = 0x00;               /* Toggle Update Register   */
   LPC_SYSCON->MAINCLKUEN    = 0x01;
+  while (!(LPC_SYSCON->MAINCLKUEN & 0x01));       /* Wait Until Updated       */
 
   LPC_SYSCON->SYSAHBCLKDIV  = SYSAHBCLKDIV_Val;
+  LPC_SYSCON->SYSAHBCLKCTRL = AHBCLKCTRL_Val;
   LPC_SYSCON->SYSTICKCLKDIV  = LPC_SYSCON->SYSAHBCLKDIV;  /* use same divider for Systick and main clock */
 
 #if ((USBCLKDIV_Val & 0x1FF) != 0)                /* USB clock is used        */
@@ -415,9 +427,10 @@ void SystemInit (void) {
 #if ((USBCLKSEL_Val & 0x003) == 0)                /* USB clock is USB PLL out */
   LPC_SYSCON->PDRUNCFG     &= ~(1 <<  8);         /* Power-up USB PLL         */
   LPC_SYSCON->USBPLLCLKSEL  = USBPLLCLKSEL_Val;   /* Select PLL Input         */
+  LPC_SYSCON->USBPLLCLKUEN  = 0x01;               /* Update Clock Source      */
   LPC_SYSCON->USBPLLCLKUEN  = 0x00;               /* Toggle Update Register   */
   LPC_SYSCON->USBPLLCLKUEN  = 0x01;
-
+  while (!(LPC_SYSCON->USBPLLCLKUEN & 0x01));     /* Wait Until Updated       */
   LPC_SYSCON->USBPLLCTRL    = USBPLLCTRL_Val;
   while (!(LPC_SYSCON->USBPLLSTAT   & 0x01));     /* Wait Until PLL Locked    */
   LPC_SYSCON->USBCLKSEL     = 0x00;               /* Select USB PLL           */
@@ -430,7 +443,6 @@ void SystemInit (void) {
   LPC_SYSCON->PDRUNCFG     |=  (1 << 10);         /* Power-down USB PHY       */
   LPC_SYSCON->PDRUNCFG     |=  (1 <<  8);         /* Power-down USB PLL       */
 #endif
-
 #endif
 
 }

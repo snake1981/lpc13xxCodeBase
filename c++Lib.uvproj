@@ -117,7 +117,7 @@
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
           <Simulator>
-            <UseSimulator>1</UseSimulator>
+            <UseSimulator>0</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -128,9 +128,9 @@
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
           </Simulator>
           <Target>
-            <UseTarget>0</UseTarget>
+            <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -139,13 +139,13 @@
             <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
+            <InitializationFile>.\sim.ini</InitializationFile>
           </SimDlls>
           <TargetDlls>
             <CpuDll></CpuDll>
@@ -153,7 +153,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\UL2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -407,14 +407,29 @@
               <FilePath>.\main.cpp</FilePath>
             </File>
             <File>
-              <FileName>SystemTick.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\SystemTick.cpp</FilePath>
-            </File>
-            <File>
               <FileName>lpc13.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\lpc13.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>lpc13I2C.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\lpc13I2C.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Lpc13Pin.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Lpc13Pin.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Lpc13Timer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Lpc13Timer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>SSPSoftware.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\SSPSoftware.cpp</FilePath>
             </File>
           </Files>
         </Group>
