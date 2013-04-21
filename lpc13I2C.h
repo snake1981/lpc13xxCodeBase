@@ -16,7 +16,7 @@
 #ifndef _LPC13I2C_H
 #define _LPC13I2C_H
 
-#include "lpc13xx.h"
+#include "LPC13Uxx.h"
 #include "i2c.h"
 
 

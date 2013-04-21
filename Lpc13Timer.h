@@ -37,7 +37,7 @@
 #define _LPC13TIMER_H
 
 
-#include "LPC13xx.h"
+#include "LPC13Uxx.h"
 #include "Timer.h"
 
 class Lpc13Timer : public Timer

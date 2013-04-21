@@ -36,7 +36,7 @@
 #ifndef _I2C_H
 #define _I2C_H
 
-#include "lpc13xx.h"
+#include "type.h"
 
 class I2C
 {

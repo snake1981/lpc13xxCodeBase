@@ -3,7 +3,7 @@
 
 
 #include "Pin.h"
-#include "lpc13xx.h"
+#include "LPC13Uxx.h"
 
 enum PinType {Input, Output,InOutput};
 
@@ -12,7 +12,8 @@ class Lpc13Pin: public Pin
 	private:
 		unsigned int port;
 		unsigned int pin;
-	  LPC_GPIO_TypeDef* gpio;
+	  
+	  LPC_GPIO_Type* gpio;
 	public:
 		Lpc13Pin(unsigned int port,unsigned int pin,PinType pinType);
 		virtual bool GetValue();

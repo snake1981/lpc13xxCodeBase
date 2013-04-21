@@ -37,36 +37,97 @@
 #include "SSPSoftware.h"
 #include "SSP.h"
 #include "I2C.h"
+#include "drivers/sensors/LM75.h"
+#include "drivers/rf/rfm70.h"
+
+const unsigned char tx_buf[17]={
+    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,0x78};
+
+void Receive_Packet( rfm70 &radio){
+	unsigned char len,i,chksum;
+	unsigned char rx_buf[ RFM70_MAX_PACKET_LEN ];
+
+	if( ! radio.receive_fifo_empty() ){
+		do {
+			len=radio.register_read( RFM70_CMD_R_RX_PL_WID );
+
+			if( len <= RFM70_MAX_PACKET_LEN ){
+				radio.buffer_read( RFM70_CMD_R_RX_PAYLOAD,rx_buf,len );
+			} else {
+				radio.register_write( RFM70_CMD_FLUSH_RX,0 );
+			}
+							
+		} while( ! radio.receive_fifo_empty());
+		
+		chksum = 0;
+		for(i=0;i<16;i++){
+			chksum +=rx_buf[i]; 
+		}
+	}
+}
+
+void Send_Packet( 
+   rfm70 &radio, unsigned char type, 
+   const unsigned char* pbuf, unsigned char len ,Timer* timer
+){
+	radio.mode_transmit();
+	radio.buffer_write( type, pbuf, len); 
+   timer->DelayMS(100);	 	
+   // radio.mode_receive(); 
+}    
 
 int main(void)
 {
+	
+  uint8_t buffer[16];
 	Lpc13 lpc;
 	Lpc13Timer timer= lpc.GetTimer();
 	//Define Pins for spi
-	Lpc13Pin mosiPin= lpc.GetPin(2,3,Input);
-	Lpc13Pin misoPin= lpc.GetPin(2,2,Output);
-	Lpc13Pin sckPin= lpc.GetPin(2,1,Input);
+	Lpc13Pin mosiPin= lpc.GetPin(1,22,Input);
+	Lpc13Pin misoPin= lpc.GetPin(1,21,Output);
+	Lpc13Pin sckPin= lpc.GetPin(1,20,Input);
 	//Chip select
-  Lpc13Pin sSelPin= lpc.GetPin(2,0,Input);
-	sSelPin.SetValue(false);
+  Lpc13Pin sSelPin= lpc.GetPin(1,19,Input);
+	
+	//Chip select
+  Lpc13Pin cePin= lpc.GetPin(0,23,Input);
+	cePin.SetValue(false);
+	
+	Lpc13Pin irq= lpc.GetPin(0,16,Output);
+	
+//	sSelPin.SetValue(true);
+	//sSelPin.SetValue(false);
 	
 	SSPSoftware sspSoftware= lpc.GetSoftwareSSP(&misoPin,&mosiPin,&sckPin,&timer);
    
 	SSP* ssp = &sspSoftware;
 	
 	ssp->SSPInit();
-	unsigned char status1 = ssp->SSPSend(0x00);
-	unsigned char status2 = ssp->SSPSend(0x00);
 	
+	rfm70 rfm(ssp,&sSelPin,&cePin,&timer);
+ bool irqValue= irq.GetValue();
+	bool isOnline =rfm.is_present();
+	rfm.init();
+	 rfm.channel( 9 );
 
-	LPC13I2C lpci2c = lpc.GetI2C();
-  lpci2c.Init();
+   Receive_Packet( rfm);
+
+
+LPC13I2C lpcI2c = lpc.GetI2C();
+
 	
-	uint8_t temp[2];
-
-  bool result = lpci2c.Read(0x90,temp,2);
-	while(true)
+LM75 lm75(&lpcI2c,0x90);
+ uint8_t result =  lm75.ReadTemp();
+ int x=0;
+ 	while(true)
 	{
-		timer.DelayMS(10);
+		unsigned char retransmit = rfm.retransmit_count();
+ if (result || isOnline||irqValue||retransmit)
+	x=1;
+
+//   Send_Packet( rfm, RFM70_CMD_W_TX_PAYLOAD_NOACK, tx_buf, 17,&timer);
+		irqValue= irq.GetValue();
+ Receive_Packet( rfm);
+//		timer.DelayMS(1000);
 	}
 }
