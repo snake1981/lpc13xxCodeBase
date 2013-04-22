@@ -90,6 +90,13 @@ class LPC13I2C: public I2C
 		*/
 		/**************************************************************************/
 	  virtual bool Read(uint8_t addr, uint8_t* dataOut, uint32_t len );
+		 /**************************************************************************/
+		/*! 
+				@brief Read data over i2c
+	      @return true if success else false
+		*/
+		/**************************************************************************/
+		virtual bool Read(uint8_t addr,uint8_t* dataIn ,uint32_t dataInLen, uint8_t* dataOut, uint32_t dataOutLen );
 		
 		 
 };

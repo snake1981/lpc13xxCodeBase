@@ -61,5 +61,13 @@ class I2C
 		*/
 		/**************************************************************************/
 	  virtual bool Read(uint8_t addr, uint8_t* dataOut, uint32_t len )=0;
+	
+			 /**************************************************************************/
+		/*! 
+				@brief Read data over i2c
+	      @return true if success else false
+		*/
+		/**************************************************************************/
+		virtual bool Read(uint8_t addr,uint8_t* dataIn ,uint32_t dataInLen, uint8_t* dataOut, uint32_t dataOutLen )=0;
 };
 #endif
