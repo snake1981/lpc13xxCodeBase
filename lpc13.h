@@ -46,4 +46,6 @@ class Lpc13
 		SSPSoftware GetSoftwareSSP(Pin* misoPin,Pin* mosiPin,Pin* sckPin,Timer* timer);
 		LPC13I2C GetI2C();
 	
+	  void Sleep();
+	
 };

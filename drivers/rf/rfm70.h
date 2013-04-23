@@ -358,9 +358,9 @@ typedef unsigned char rfm70_buffer [ RFM70_MAX_PACKET_LEN ];
 
 //! @}
 
-#include "../../SSP.h"
-#include "../../Pin.h"
-#include "../../Timer.h"
+#include "base/SSP.h"
+#include "base/Pin.h"
+#include "base/Timer.h"
 
    
 //! interface to an RFM70 module

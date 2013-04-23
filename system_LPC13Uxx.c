@@ -24,7 +24,7 @@
 
 
 #include <stdint.h>
-#include "LPC13Uxx.h"
+#include "cmsis/LPC13Uxx.h"
 
 /*
 //-------- <<< Use Configuration Wizard in Context Menu >>> ------------------

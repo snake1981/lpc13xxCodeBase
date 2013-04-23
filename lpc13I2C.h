@@ -16,8 +16,8 @@
 #ifndef _LPC13I2C_H
 #define _LPC13I2C_H
 
-#include "LPC13Uxx.h"
-#include "i2c.h"
+#include "cmsis/LPC13Uxx.h"
+#include "base/i2c.h"
 
 
 enum I2CState

@@ -40,7 +40,7 @@
 #define LM75_h
 
 #include "../../type.h"
-#include "../../i2c.h"
+#include "base/i2c.h"
 
 //Registers
 enum Registers

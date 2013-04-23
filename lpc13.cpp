@@ -37,6 +37,8 @@
 #include "Lpc13Pin.h"
 #include "SSPSoftware.h"
 #include "lpc13Timer.h"
+#include "cmsis/LPC13Uxx.h"
+
 Lpc13Timer Lpc13::GetTimer()
 {
 	//Init Timer
@@ -63,3 +65,14 @@ LPC13I2C Lpc13::GetI2C()
 	LPC13I2C i2c = LPC13I2C();
 	return i2c;
 }
+
+void Lpc13::Sleep()
+{
+	  LPC_SYSCON->PDAWAKECFG = LPC_SYSCON->PDRUNCFG;
+ // LPC_SYSCON->PDSLEEPCFG = 0x0;
+	SCB->SCR |= 0x04;
+	LPC_PMU->PCON = 0x2;
+	// Enter the sleep mode
+  __WFI();
+}
+

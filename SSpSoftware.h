@@ -37,7 +37,7 @@
 #ifndef _SSPSOFTWARE_H
 #define _SSPSOFTWARE_H
 
-#include "SSP.h"
+#include "base/SSP.h"
 #include "Lpc13Pin.h"
 #include "Lpc13Timer.h"
 
