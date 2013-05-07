@@ -347,7 +347,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--feedback=unused.txt</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\lpc13xxCodeBase</IncludePath>
@@ -381,7 +381,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--feedback=unused.txt</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -430,6 +430,11 @@
               <FileName>system_LPC13Uxx.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\system_LPC13Uxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>Lpc13PWM.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Lpc13PWM.cpp</FilePath>
             </File>
           </Files>
         </Group>
